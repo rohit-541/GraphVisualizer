@@ -3,12 +3,16 @@ import { createContext, useContext, useState } from "react";
 // Create the context
 const GraphContext = createContext();
 
-// GraphContext Provider component
+// Provider
 export const GraphContextProvider = ({ children }) => {
   const [nodes, setNodes] = useState([]);
   const [matrix, setMatrix] = useState([]);
+  const [distances, setDistances] = useState([]);
+  const [currentNode, setCurrentNode] = useState(null);
+  const [neighbours, setNeighbours] = useState([]);
+  const [highlightedPath, setHighlightedPath] = useState([]);
 
-  // Update graph with random node positions
+  // Initialize new graph with random node positions
   const updateGraph = (count) => {
     const newNodes = Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -22,20 +26,34 @@ export const GraphContextProvider = ({ children }) => {
 
     setNodes(newNodes);
     setMatrix(newMatrix);
+    setDistances(Array(count).fill(Infinity));
+    setCurrentNode(null);
+    setNeighbours([]);
+    setHighlightedPath([]);
   };
 
   return (
-    <GraphContext.Provider 
-        value={{ 
-            nodes,
-            matrix, 
-            setMatrix, 
-            updateGraph 
-        }}>
+    <GraphContext.Provider
+      value={{
+        nodes,
+        setNodes,
+        matrix,
+        setMatrix,
+        distances,
+        setDistances,
+        currentNode,
+        setCurrentNode,
+        neighbours,
+        setNeighbours,
+        highlightedPath,
+        setHighlightedPath,
+        updateGraph,
+      }}
+    >
       {children}
     </GraphContext.Provider>
   );
 };
 
-// Custom hook to use the context
+// Hook
 export const useGraph = () => useContext(GraphContext);
