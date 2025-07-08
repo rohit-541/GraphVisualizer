@@ -11,6 +11,8 @@ export const GraphContextProvider = ({ children }) => {
   const [currentNode, setCurrentNode] = useState(null);
   const [neighbours, setNeighbours] = useState([]);
   const [highlightedPath, setHighlightedPath] = useState([]);
+  const [visited,setVisited] = useState(Array(nodes.length).fill(false));
+  const [isCycle,setIsCycle] = useState(false);
 
   // Initialize new graph with random node positions
   const updateGraph = (count) => {
@@ -48,6 +50,10 @@ export const GraphContextProvider = ({ children }) => {
         highlightedPath,
         setHighlightedPath,
         updateGraph,
+        isCycle,
+        setIsCycle,
+        visited,
+        setVisited
       }}
     >
       {children}

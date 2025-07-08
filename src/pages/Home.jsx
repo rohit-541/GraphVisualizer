@@ -8,6 +8,8 @@ function Home() {
     <>
         <CreateGraph/>
         <NavLink to={"/bfs"}><button>BFS</button></NavLink>
+        <NavLink to={"/cycle"}><button>Cycle</button></NavLink>
+        <NavLink to={"/dijstra"}><button>Cycle</button></NavLink>
         <GraphCanvas/>
     </>
   )

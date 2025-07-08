@@ -1,6 +1,7 @@
 import React from "react";
 import GraphCanvas from "../components/GraphCanvas";
 import { useGraph } from "../Context/GraphContext";
+import VisitedArrayView from "../components/VisitedArray";
 
 export default function BFS() {
   const {
@@ -11,17 +12,24 @@ export default function BFS() {
     setNeighbours,
     matrix,
     nodes,
+    visited,
+    setVisited,
   } = useGraph();
 
   const startNode = 0;
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   async function startBFS() {
-    const visited = Array(nodes.length).fill(false);
     const queue = [];
 
     queue.push(startNode);
-    visited[startNode] = true;
+
+    // Local copy of visited to manage logic
+    const localVisited = Array(nodes.length).fill(false);
+    localVisited[startNode] = true;
+    setVisited([...localVisited]);
+
+    await sleep(100);
     setHighlightedPath([]);
     setNeighbours([]);
 
@@ -34,11 +42,13 @@ export default function BFS() {
 
       const newNeighbours = [];
       for (let i = 0; i < matrix[curr].length; i++) {
-        if (matrix[curr][i] > 0 && !visited[i]) {
+        if (matrix[curr][i] > 0 && !localVisited[i]) {
           queue.push(i);
-          visited[i] = true;
-          newNeighbours.push(i);
+          localVisited[i] = true;
+          setVisited([...localVisited]); // UI update
+          await sleep(100);
 
+          newNeighbours.push(i);
           setHighlightedPath(prev => [...prev, { source: curr, target: i }]);
         }
       }
@@ -59,6 +69,10 @@ export default function BFS() {
       >
         Start BFS
       </button>
+
+      {/* Visual Visited Array View */}
+      <VisitedArrayView visited={visited} currentNode={currentNode}/>
+
       <GraphCanvas />
     </div>
   );
